@@ -3,8 +3,7 @@ import pygame
 import random
 import sys
 import time
-from datetime import datetime
-
+from pygame import mixer
 pygame.init()
 
 WHITE = 235, 255, 255
@@ -52,21 +51,20 @@ def crouch_gen():
     return crouch
 
 
-def obstacles (win, x, y, w, h, color):
-    pygame.draw.rect(win, color, [x, y, w, h])
+def obstacles(x, y, w, h, color):
+    pygame.draw.rect(color, [x, y, w, h])
 
 
-def message_display (text):
+def message_display(text):
     font = pygame.font.Font('freesansbold.ttf', 48)
     text_surface_obj = font.render(text, True, BLACK, None)
     text_rect_obj = text_surface_obj.get_rect()
-    text_rect_obj.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 25 )
+    text_rect_obj.center = SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 25
     win.blit(text_surface_obj, text_rect_obj)
-    reset_button = pygame.image.load("resetbutton.png").convert()
-    reset_button = pygame.transform.scale(reset_button, (50, 50))
+    reset_button = pygame.image.load("reset.png").convert()
+    reset_button = pygame.transform.scale(reset_button, (60, 60))
     win.blit(reset_button, (SCREEN_WIDTH/2 - 25, SCREEN_HEIGHT/2 + 25))
     pygame.display.update()
-
 
 
 def game_over():
@@ -85,7 +83,6 @@ def reset_button_clicked():
         return True
 
 
-
 def main():
 
     pygame.display.set_caption("Attempt Create")
@@ -94,11 +91,15 @@ def main():
     height = HEIGHT
     x, y = 30, SCREEN_HEIGHT - HEIGHT
 
+    mixer.init()
+    mixer.music.load('bkgdmusic.mp3')
+    mixer.music.play(-1)
+
     obstacle_start_x = 600
     obstacle_start_y = random.randrange(SCREEN_HEIGHT - HEIGHT + 15, SCREEN_HEIGHT)
     obstacle_w = 15
     obstacle_h = 15
-    obstacle_speed = -10
+    obstacle_speed = -7
 
     score = 0
 
@@ -111,9 +112,6 @@ def main():
     while run:
         time.sleep(0.03)
         score += 1
-
-
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -124,6 +122,7 @@ def main():
                     first_time = True
                     obstacle_start_x = SCREEN_WIDTH + 20
                     score = 0
+
         if is_game_over:
             if first_time:
                 game_over()
@@ -133,7 +132,7 @@ def main():
             rel_bkgd_x = bkgd_x % bkgd.get_rect().width
             win.blit(bkgd, (rel_bkgd_x - bkgd.get_rect().width, 0))
             if rel_bkgd_x < SCREEN_WIDTH:
-                win.blit(bkgd, (rel_bkgd_x,0))
+                win.blit(bkgd, (rel_bkgd_x, 0))
             bkgd_x -= 2
 
             keys = pygame.key.get_pressed()
@@ -143,7 +142,7 @@ def main():
             if keys[pygame.K_SPACE]:
                 jumping = True
 
-            obstacles(win, obstacle_start_x, obstacle_start_y, obstacle_w, obstacle_h, BLACK)
+            obstacles(obstacle_start_x, obstacle_start_y, obstacle_w, obstacle_h, BLACK)
             obstacle_start_x += obstacle_speed
 
             if obstacle_start_x < 0:
@@ -170,7 +169,7 @@ def draw_and_update(height, width, win, x, y, color, score):
     score_text_rect = score_text.get_rect()
     score_text_rect.right = SCREEN_WIDTH - 10
     score_text_rect.top = 5
-    win.blit(score_text, score_text_rect) #(460, 10))
+    win.blit(score_text, score_text_rect)
     pygame.display.update()
 
 
