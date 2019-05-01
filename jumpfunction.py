@@ -52,7 +52,7 @@ def crouch_gen():
 
 
 def obstacles(x, y, w, h, color):
-    pygame.draw.rect(color, [x, y, w, h])
+    pygame.draw.rect(win, color, [x, y, w, h])
 
 
 def message_display(text):
