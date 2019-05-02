@@ -20,7 +20,7 @@ RST_BTN_W, RST_BTN_H = 50, 50
 win = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 SCORE_FONT = pygame.font.SysFont("monospacebold", 30)
 
-
+#original difficulty solved with classmate
 def jump(y, count=10):
     still_jumping = True
     direction = -1 if count < 0 else 1
